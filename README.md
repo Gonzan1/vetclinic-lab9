@@ -1,40 +1,26 @@
-# VetClinic - Authentication (Lab 8)
+# Lab 9 - VetClinic: Authorization with Pundit
 
-This application has been updated to include user authentication using the **Devise** gem. 
+## Authorization & Role Matrix
+This application enforces authorization using the Pundit gem to ensure users can only access and modify records according to their specific roles. The role matrix is strictly implemented as follows: 
+* **Admins** have full CRUD (Create, Read, Update, Delete) access across all resources in the system. 
+* **Vets** have read-only access to owners, pets, and other vets. They can only edit their own vet profile, and manage (view, create, update, destroy) appointments and treatments specifically assigned to them. 
+* **Owners** have restricted access: they can only view and edit their own owner profile, manage their own pets and appointments, and have read-only access to vet profiles (for booking purposes) and their own treatments.
 
-## Application Security
-The application is no longer fully open to the public. 
-* The **Home (root) page** remains public for anonymous visitors.
-* All other resource pages (Owners, Pets, Vets, Appointments, Treatments) are protected and require the user to sign in.
+## Seeded Users & Credentials
+The database has been seeded with demonstration users. Each user role (except Admin) is properly linked to its respective domain record (`Owner` or `Vet`) via `user_id`. All accounts use the following password: `password123`
 
-## Setup Instructions
+### Admins (Full Access)
+* `admin@vetclinic.com`
 
-To run this application locally:
+### Vets (Linked to Vet records)
+* `vet@vetclinic.com` (Linked to a seeded Vet profile, e.g., Dr. Genaro Soto)
 
-1. Install the required gems:
-        bundle install
-2. Setup the database (this will drop, create, migrate, and seed the database):
-        bin/rails db:setup
-3. Start the server:
-        bin/rails server
+### Owners (Linked to Owner records)
+* `john@vetclinic.com` (Linked to John Perez's owner profile and his pets)
+* `owner2@vetclinic.com` (Secondary owner for testing scope restrictions)
 
-## Seeded Users Credentials
+## Deviations from the Matrix
+* None. The implementation strictly follows the required authorization matrix.
 
-The database is seeded with three default users (one for each role). You can use these credentials to sign in and test the application:
-
-**1. Admin User**
-* **Email:** admin@vetclinic.com
-* **Password:** password123
-
-**2. Veterinarian User**
-* **Email:** vet@vetclinic.com
-* **Password:** password123
-
-**3. Pet Owner User**
-* **Email:** owner@vetclinic.com
-* **Password:** password123
-
-## Customizations
-* **User Model:** Extended the default Devise User model to include `first_name` (string), `last_name` (string), and `role` (integer enum: owner, vet, admin).
-* **Strong Parameters:** Overrode Devise's `configure_permitted_parameters` in the ApplicationController to permit `first_name` and `last_name` during sign-up and account updates. The `role` attribute is intentionally restricted and cannot be assigned via user-facing forms.
-* **Views:** Cloned Devise views and styled them with Bootstrap (specifically the sign-in, sign-up, and edit-account forms).
+---
+**Author:** Gonzalo Salinas
