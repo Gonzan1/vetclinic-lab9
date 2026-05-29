@@ -2,7 +2,7 @@ class VetsController < ApplicationController
   before_action :set_vet, only: [:show, :edit, :update, :destroy]
 
   def index
-    @vets = Vet.all
+    @vets = policy_scope(Vet)
   end
 
   def show
@@ -10,10 +10,12 @@ class VetsController < ApplicationController
 
   def new
     @vet = Vet.new
+    authorize @vet
   end
 
   def create
     @vet = Vet.new(vet_params)
+    authorize @vet
     if @vet.save
       redirect_to @vet, notice: 'Vet was successfully created.'
     else

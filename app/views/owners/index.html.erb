@@ -1,7 +1,9 @@
 <h1>Owners</h1>
 
 <!-- 1. El botón "New" va AQUÍ, arriba de la tabla -->
-<%= link_to 'New Owner', new_owner_path, class: "btn btn-success mb-3" %>
+<% if policy(Owner).create? %>
+  <%= link_to 'New Owner', new_owner_path, class: "btn btn-success mb-3" %>
+<% end %>
 
 <table class="table table-striped">
   <thead>
@@ -21,9 +23,17 @@
         
         <!-- 2. Los 3 botones van AQUÍ, adentro de la última celda (td) de la fila -->
         <td>
-          <%= link_to 'View', owner, class: "btn btn-sm btn-primary" %>
-          <%= link_to 'Edit', edit_owner_path(owner), class: "btn btn-sm btn-warning" %>
-          <%= button_to 'Delete', owner, method: :delete, data: { turbo_confirm: "Are you sure?" }, class: "btn btn-sm btn-danger mt-1" %>
+          <% if policy(owner).show? %>
+            <%= link_to 'View', owner, class: "btn btn-sm btn-primary" %>
+          <% end %>
+          
+          <% if policy(owner).update? %>
+            <%= link_to 'Edit', edit_owner_path(owner), class: "btn btn-sm btn-warning" %>
+          <% end %>
+          
+          <% if policy(owner).destroy? %>
+            <%= button_to 'Delete', owner, method: :delete, data: { turbo_confirm: "Are you sure?" }, class: "btn btn-sm btn-danger mt-1" %>
+          <% end %>
         </td>
       </tr>
     <% end %>

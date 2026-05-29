@@ -2,7 +2,7 @@ class PetsController < ApplicationController
   before_action :set_pet, only: [:show, :edit, :update, :destroy]
 
   def index
-    @pets = Pet.includes(:owner).all
+    @pets = policy_scope(Pet).includes(:owner)  
   end
 
   def show
@@ -10,10 +10,12 @@ class PetsController < ApplicationController
 
   def new
     @pet = Pet.new
+    authorize @pet
   end
 
   def create
     @pet = Pet.new(pet_params)
+    authorize @pet
     if @pet.save
       redirect_to @pet, notice: 'Pet was successfully created.'
     else

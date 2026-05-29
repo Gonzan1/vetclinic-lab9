@@ -1,5 +1,6 @@
 class Owner < ApplicationRecord
   has_many :pets
+  belongs_to :user, optional: true
 
   # Callbacks
   before_validation :normalize_email

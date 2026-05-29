@@ -1,6 +1,9 @@
 <h1>Pets</h1>
 
-<%= link_to 'New Pet', new_pet_path, class: "btn btn-success mb-3" %>
+<%# Aquí escondemos el botón de Nueva Mascota %>
+<% if policy(Pet).create? %>
+  <%= link_to 'New Pet', new_pet_path, class: "btn btn-success mb-3" %>
+<% end %>
 
 <table class="table table-striped">
   <thead>
@@ -9,7 +12,7 @@
       <th>Species</th>
       <th>Owner</th>
       <th>Actions</th>
-      <th>Photo</th>  
+      <th>Photo</th>
     </tr>
   </thead>
   <tbody>
@@ -18,20 +21,30 @@
         <td><%= pet.name %></td>
         <td><%= pet.species %></td>
         <td><%= pet.owner.full_name if pet.owner %></td>
+        
         <td>
-          <%= link_to 'View', pet, class: "btn btn-sm btn-primary" %>
-          <%= link_to 'Edit', edit_pet_path(pet), class: "btn btn-sm btn-warning" %>
-          <%= button_to 'Delete', pet, method: :delete, data: { turbo_confirm: "Are you sure?" }, class: "btn btn-sm btn-danger mt-1" %>
+          <%# Aquí escondemos los botones de la tabla %>
+          <% if policy(pet).show? %>
+            <%= link_to 'View', pet, class: "btn btn-sm btn-primary" %>
+          <% end %>
+          
+          <% if policy(pet).update? %>
+            <%= link_to 'Edit', edit_pet_path(pet), class: "btn btn-sm btn-warning" %>
+          <% end %>
+          
+          <% if policy(pet).destroy? %>
+            <%= button_to 'Delete', pet, method: :delete, data: { turbo_confirm: "Are you sure?" }, class: "btn btn-sm btn-danger mt-1" %>
+          <% end %>
         </td>
+        
         <td>
-        <% if pet.photo.attached? %>
-          <%= image_tag pet.photo.variant(resize_to_fill: [60, 60]), class: "rounded border" %>
-        <% else %>
-          <div class="bg-light border rounded" style="width: 60px; height: 60px;"></div>
-        <% end %>
+          <% if pet.photo.attached? %>
+            <%= image_tag pet.photo.variant(resize_to_fill: [60, 60]), class: "rounded border" %>
+          <% else %>
+            <div class="bg-light border rounded" style="width: 60px; height: 60px;"></div>
+          <% end %>
         </td>
       </tr>
     <% end %>
   </tbody>
 </table>
-

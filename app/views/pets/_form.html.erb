@@ -26,10 +26,15 @@
     <%= form.date_field :date_of_birth, class: "form-control" %>
   </div>
 
-  <div class="mb-3">
-    <%= form.label :owner_id, "Owner", class: "form-label" %>
-    <%= form.collection_select :owner_id, Owner.all, :id, :full_name, { prompt: "Select an owner" }, class: "form-select" %>
-  </div>
+  <% if current_user.admin? || current_user.vet? %>
+    <div class="mb-3">
+      <%= form.label :owner_id, "Owner", class: "form-label" %>
+      <%= form.collection_select :owner_id, Owner.all, :id, :full_name, { prompt: "Select an owner" }, class: "form-select" %>
+    </div>
+  <% elsif current_user.owner? %>
+    <%# Agregamos el '&.' (safe navigation) para que no explote si el usuario no tiene ficha %>
+    <%= form.hidden_field :owner_id, value: current_user.owner&.id %>
+  <% end %>
 
   <div class="mb-3">
     <%= form.label :photo, "Pet Photo", class: "form-label" %>

@@ -2,7 +2,7 @@ class AppointmentsController < ApplicationController
   before_action :set_appointment, only: [:show, :edit, :update, :destroy]
 
   def index
-    @appointments = Appointment.includes(:pet, :vet).all
+    @appointments = policy_scope(Appointment).includes(:pet, :vet)
   end
 
   def show
@@ -12,10 +12,12 @@ class AppointmentsController < ApplicationController
 
   def new
     @appointment = Appointment.new(status: 'scheduled')
+    authorize @appointment
   end
 
   def create
     @appointment = Appointment.new(appointment_params)
+    authorize @appointment
     if @appointment.save
       redirect_to @appointment, notice: 'Appointment was successfully created.'
     else

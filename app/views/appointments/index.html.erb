@@ -1,6 +1,8 @@
 <h1>Appointments</h1>
 
-<%= link_to 'New Appointment', new_appointment_path, class: "btn btn-success mb-3" %>
+<% if policy(Appointment).create? %>
+  <%= link_to 'New Appointment', new_appointment_path, class: "btn btn-success mb-3" %>
+<% end %>
 
 <table class="table table-striped">
   <thead>
@@ -29,9 +31,15 @@
           <span class="badge <%= badge_color %>"><%= appointment.status.titleize %></span>
         </td>
         <td>
-          <%= link_to 'View', appointment, class: "btn btn-sm btn-primary" %>
-          <%= link_to 'Edit', edit_appointment_path(appointment), class: "btn btn-sm btn-warning" %>
-          <%= button_to 'Delete', appointment, method: :delete, data: { turbo_confirm: "Are you sure?" }, class: "btn btn-sm btn-danger mt-1" %>
+          <% if policy(appointment).show? %>
+            <%= link_to 'View', appointment, class: "btn btn-sm btn-primary" %>
+          <% end %>
+          <% if policy(appointment).update? %>
+            <%= link_to 'Edit', edit_appointment_path(appointment), class: "btn btn-sm btn-warning" %>
+          <% end %>
+          <% if policy(appointment).destroy? %>
+            <%= button_to 'Delete', appointment, method: :delete, data: { turbo_confirm: "Are you sure?" }, class: "btn btn-sm btn-danger mt-1" %>
+          <% end %>
         </td>
       </tr>
     <% end %>

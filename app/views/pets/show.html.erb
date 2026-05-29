@@ -46,10 +46,14 @@
 </ul>
 
 <br>
-<%= link_to 'Back to Pets', pets_path, class: "btn btn-secondary" %>
-
 <div class="mt-4 d-flex gap-2">
-  <%= link_to 'Edit', edit_pet_path(@pet), class: "btn btn-warning" %>
-  <%= button_to 'Delete', @pet, method: :delete, data: { turbo_confirm: "Are you sure?" }, class: "btn btn-danger" %>
+  <% if policy(@pet).update? %>
+    <%= link_to 'Edit', edit_pet_path(@pet), class: "btn btn-warning" %>
+  <% end %>
+
+  <% if policy(@pet).destroy? %>
+    <%= button_to 'Delete', @pet, method: :delete, data: { turbo_confirm: "Are you sure?" }, class: "btn btn-danger" %>
+  <% end %>
+
   <%= link_to 'Back to Pets', pets_path, class: "btn btn-secondary" %>
 </div>
